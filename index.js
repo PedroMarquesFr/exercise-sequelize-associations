@@ -1,33 +1,21 @@
 const bodyParser = require("body-parser");
 const { Patient, Plan, Surgerie } = require("./models");
 const express = require("express");
+const router = require("./router");
 
 const app = express();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get("/listPatientWithPlan", (req, res) => {
-  console.log("entrei");
-  Patient.findAll({
-    include: [{ model: Plan, as: "plan" }],
-  }).then((resp) => res.json(resp));
+app.use((req, res, next) => {
+  console.log(`- ${req.method} ${req.path}`);
+  next();
 });
-app.get("/findPatient/:id", async (req, res) => {
-  const { id } = req.params;
-  const resp = await Patient.findByPk(id);
-  return res.json(resp);
-});
-app.get("/listPatientWithSurgerie", (req, res) => {
-  console.log("entrei");
-  Patient.findAll({
-    include: [{ model: Surgerie, as: "surgery" }],
-  }).then((resp) => res.json(resp));
-});
-app.get("/listSurgerieWithPatient", (req, res) => {
-  console.log("entrei");
-  Surgerie.findAll({
-    include: [{ model: Patient, as: "patients" }],
-  }).then((resp) => res.json(resp));
+
+app.use(router);
+
+app.use((err, req, res, next) => {
+  res.status(500).send({ error: `${err} ou algum erro interno` });
 });
 
 const PORT = 3000;
