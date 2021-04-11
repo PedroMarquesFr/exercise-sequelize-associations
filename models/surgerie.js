@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       specialty: DataTypes.STRING,
-      doctor: DataTypes.DATE,
+      doctor: DataTypes.STRING,
     },
     {
       sequelize,
