@@ -65,4 +65,13 @@ router.post("/patient", async (req, res) => {
   }
 });
 
+router.get("/surgeries/:doctorName", (req, res) => {
+  const { doctorName } = req.params;
+  console.log(doctorName);
+  Surgerie.findAll({
+    where: { doctor: `${doctorName}` },
+    include: [{ model: Patient, as: "patients" }],
+  }).then((resp) => res.json(resp));
+});
+
 module.exports = router;
